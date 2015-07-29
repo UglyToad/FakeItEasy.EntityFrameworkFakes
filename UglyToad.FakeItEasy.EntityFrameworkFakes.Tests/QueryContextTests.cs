@@ -1,15 +1,18 @@
 ﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Threading.Tasks;
-    using global::FakeItEasy;
+    using DataAccess;
+    using Domain;
+    using Helpers;
     using Xunit;
 
     public class QueryContextTests
     {
+        private static readonly AcornComparer Comparer = new AcornComparer();
         private readonly TestContext context;
 
         public QueryContextTests()
@@ -20,7 +23,7 @@
         [Fact]
         public void CanCreateATestContext()
         {
-            TestContext createdContext = ContextFaker.CreateContext<TestContext>();
+            var createdContext = ContextFaker.CreateContext<TestContext>();
 
             Assert.NotNull(createdContext);
         }
@@ -34,42 +37,11 @@
         }
 
         [Fact]
-        public void CallDbSetFakeDirectly()
-        {
-            var data = new Acorn[] { };
-
-            IQueryable<Acorn> dataQueryable = data.AsQueryable();
-            IEnumerator<Acorn> dataEnumerator = dataQueryable.GetEnumerator();
-
-            var mockSet = A.Fake<DbSet<Acorn>>(builder =>
-            {
-                builder.Implements(typeof(IDbAsyncEnumerable<Acorn>));
-                builder.Implements(typeof(IQueryable<Acorn>));
-            });
-
-            var mockEnumerable = (IDbAsyncEnumerable<Acorn>)mockSet;
-
-            A.CallTo(() => (mockEnumerable).GetAsyncEnumerator())
-                .Returns(new TestDbAsyncEnumerator<Acorn>(dataEnumerator));
-
-            A.CallTo(() => ((IQueryable<Acorn>)mockSet).Provider)
-                .Returns(new TestDbAsyncQueryProvider<Acorn>(dataQueryable.Provider));
-
-            A.CallTo(() => ((IQueryable<Acorn>)mockSet).Expression).Returns(dataQueryable.Expression);
-            A.CallTo(() => ((IQueryable<Acorn>)mockSet).ElementType).Returns(dataQueryable.ElementType);
-            A.CallTo(() => ((IQueryable<Acorn>)mockSet).GetEnumerator()).Returns(dataEnumerator);
-
-            A.CallTo(() => context.Acorns).Returns(mockSet);
-
-            Assert.Empty(context.Acorns.ToArray());
-        }
-
-        [Fact]
         public void CanQueryDbSetWithObjects()
         {
             ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
 
-            Assert.Equal(TestDataFactory.AcornTestData, context.Acorns.ToArray(), new AcornComparer());
+            Assert.Equal(TestDataFactory.AcornTestData, context.Acorns.ToArray(), Comparer);
         }
 
         [Fact]
@@ -79,36 +51,87 @@
 
             var result = await context.Acorns.ToListAsync();
 
-            Assert.Equal(TestDataFactory.AcornTestData, result, new AcornComparer());
+            Assert.Equal(TestDataFactory.AcornTestData, result, Comparer);
         }
 
         [Fact]
-        public void CanAddDbSetObjects()
+        public void PassNullListTreatsAsEmptyList()
         {
-            var acorns = TestDataFactory.AcornTestData.ToList();
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, null);
 
-            ContextFaker.ContextReturnsDbSet(() => context.Acorns, acorns);
-
-            context.Acorns.Add(new Acorn
-            {
-                Id = 1,
-                NutritionValue = 5
-            });
-
-            var result = context.Acorns.ToArray();
+            Assert.Empty(context.Acorns);
         }
 
-        private class AcornComparer : IEqualityComparer<Acorn>
+        [Fact]
+        public void SupportsLinqQuerying()
         {
-            public bool Equals(Acorn x, Acorn y)
-            {
-                return x.Id == y.Id && x.NutritionValue == y.NutritionValue;
-            }
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
 
-            public int GetHashCode(Acorn obj)
-            {
-                return obj.GetHashCode();
-            }
+            var result = context.Acorns.Where(a => (a.Id + a.NutritionValue)%2 == 0).OrderBy(a => a.Id);
+
+            Assert.Equal(TestDataFactory.AcornTestData.Where(a => (a.Id + a.NutritionValue)%2 == 0).OrderBy(a => a.Id), result, Comparer);
+        }
+
+        [Fact]
+        public async Task SupportsAsyncLinqQuerying()
+        {
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
+
+            var result = await context.Acorns.Where(a => a.NutritionValue > 5).ToArrayAsync();
+
+            Assert.Equal(TestDataFactory.AcornTestData.Where(a => a.NutritionValue > 5).OrderBy(a => a.Id), result.OrderBy(a => a.Id), Comparer);
+        }
+
+        [Fact]
+        public void SingleNotPresentThrowsCorrectException()
+        {
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
+
+            Assert.Throws<InvalidOperationException>(() => context.Acorns.Single(a => a.Id == int.MaxValue));
+        }
+
+        [Fact]
+        public async Task SingleAsyncNotPresentThrowsCorrectException()
+        {
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
+
+            await
+                Assert.ThrowsAsync<InvalidOperationException>(
+                    () => context.Acorns.SingleAsync(a => a.Id == int.MaxValue));
+        }
+
+        [Fact]
+        public void FindWorksCorrectlyForFirstInList()
+        {
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
+
+            var expected = TestDataFactory.AcornTestData.OrderBy(a => a.Id).First();
+
+            var result = context.Acorns.Find(expected.Id);
+
+            Assert.Equal(expected, result, Comparer);
+        }
+
+        [Fact]
+        public void FindWorksCorrectlyForSecondInList()
+        {
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
+
+            var expected = TestDataFactory.AcornTestData.OrderBy(a => a.Id).Skip(1).First();
+
+            var result = context.Acorns.Find(expected.Id);
+
+            Assert.Equal(expected, result, Comparer);
+        }
+
+        [Fact]
+        public void FindReturnsNullCorrectly()
+        {
+            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
+            
+            var result = context.Acorns.Find(int.MaxValue);
+
+            Assert.Null(result);
         }
     }
 }

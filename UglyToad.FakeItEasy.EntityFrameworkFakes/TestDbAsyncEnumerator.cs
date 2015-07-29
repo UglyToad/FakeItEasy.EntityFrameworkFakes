@@ -5,7 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
+    internal class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> inner;
 

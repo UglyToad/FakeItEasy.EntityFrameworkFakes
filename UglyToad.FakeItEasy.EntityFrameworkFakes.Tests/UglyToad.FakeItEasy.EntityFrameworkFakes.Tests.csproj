@@ -68,13 +68,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Acorn.cs" />
-    <Compile Include="FurColor.cs" />
+    <Compile Include="AddTests.cs" />
+    <Compile Include="Domain\Acorn.cs" />
+    <Compile Include="Domain\FurColor.cs" />
+    <Compile Include="Helpers\AcornComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryContextTests.cs" />
-    <Compile Include="Squirrel.cs" />
-    <Compile Include="TestContext.cs" />
-    <Compile Include="TestDataFactory.cs" />
+    <Compile Include="Domain\Squirrel.cs" />
+    <Compile Include="DataAccess\TestContext.cs" />
+    <Compile Include="Helpers\TestDataFactory.cs" />
+    <Compile Include="TechnicalTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

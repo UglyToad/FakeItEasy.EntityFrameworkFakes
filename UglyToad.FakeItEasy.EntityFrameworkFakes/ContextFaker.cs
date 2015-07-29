@@ -18,6 +18,11 @@
         public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor, List<T> data)
             where T : class
         {
+            if (data == null)
+            {
+                data = new List<T>();
+            }
+
             var fakeSet = GetFakeDbSet<T>();
 
             SetUpFakeDbSetBehaviour(fakeSet, data);
@@ -39,6 +44,8 @@
             SetUpAsyncQueryingForFakeDbSet(dbSet, data);
 
             SetUpAddForFakeDbSet(dbSet, data);
+
+            A.CallTo(() => dbSet.Find(A<object[]>.Ignored)).Returns(dbSet.FirstOrDefault());
         }
 
         private static void SetUpAsyncQueryingForFakeDbSet<T>(DbSet<T> dbSet, ICollection<T> data) where T : class

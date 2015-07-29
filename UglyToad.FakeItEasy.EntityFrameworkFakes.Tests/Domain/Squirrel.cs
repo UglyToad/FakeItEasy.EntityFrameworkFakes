@@ -1,4 +1,4 @@
-﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests
+﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests.Domain
 {
     public class Squirrel
     {

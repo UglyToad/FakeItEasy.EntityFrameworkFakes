@@ -1,6 +1,7 @@
-﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests
+﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests.DataAccess
 {
     using System.Data.Entity;
+    using Domain;
 
     public class TestContext : DbContext
     {

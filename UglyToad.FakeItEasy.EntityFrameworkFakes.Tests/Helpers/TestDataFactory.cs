@@ -1,6 +1,7 @@
-﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests
+﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests.Helpers
 {
     using System.Collections.Generic;
+    using Domain;
 
     internal static class TestDataFactory
     {
