@@ -37,6 +37,7 @@
         }
 
         [Fact]
+        [Trait("ParallelPair", "true")]
         public void CanQueryDbSetWithObjects()
         {
             ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());

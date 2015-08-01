@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyToad.FakeItEasy.EntityFrameworkFakes", "UglyToad.FakeItEasy.EntityFrameworkFakes\UglyToad.FakeItEasy.EntityFrameworkFakes.csproj", "{6AD907B9-FF44-41B4-AC9C-6F6F90E179FF}"
 EndProject

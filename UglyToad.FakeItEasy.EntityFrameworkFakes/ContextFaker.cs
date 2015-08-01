@@ -45,6 +45,8 @@
 
             SetUpAddForFakeDbSet(dbSet, data);
 
+            SetUpRemoveForDbSet(dbSet, data);
+
             A.CallTo(() => dbSet.Find(A<object[]>.Ignored)).Returns(dbSet.FirstOrDefault());
         }
 
@@ -63,15 +65,36 @@
 
         private static void SetUpAddForFakeDbSet<T>(DbSet<T> dbSet, List<T> data) where T : class
         {
-            A.CallTo(() => dbSet.Add(A<T>.Ignored)).Invokes((T item) => data.Add(item));
+            A.CallTo(() => dbSet.Add(A<T>.Ignored))
+                .Invokes((T item) =>
+                {
+                    // Add is a no-op if the entity is already in the context in the Added state.
+                    if (!data.Contains(item))
+                    {
+                        data.Add(item);
+                    }
+                })
+                .ReturnsLazily((T item) => item);
 
-            A.CallTo(() => dbSet.AddRange(A<IEnumerable<T>>.Ignored)).Invokes((IEnumerable<T> items) =>
+            A.CallTo(() => dbSet.AddRange(A<IEnumerable<T>>.Ignored))
+                .Invokes((IEnumerable<T> items) => data.AddRange(items))
+                .ReturnsLazily((IEnumerable<T> items) => items);
+
+            A.CallTo(() => dbSet.Attach(A<T>.Ignored)).Invokes((T item) =>
             {
-                foreach (var item in items)
+                // Attach is a no-op if the entity is already in the context in the Unchanged state.
+                if (!data.Contains(item))
                 {
                     data.Add(item);
                 }
-            });
+            }).ReturnsLazily((T item) => item);
+        }
+
+        private static void SetUpRemoveForDbSet<T>(DbSet<T> dbSet, List<T> data) where T : class
+        {
+            A.CallTo(() => dbSet.Remove(A<T>.Ignored))
+                .Invokes((T item) => data.Remove(item))
+                .ReturnsLazily((T item) => item);
         }
     }
 }
