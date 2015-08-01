@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyToad.FakeItEasy.EntityF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyToad.FakeItEasy.EntityFrameworkFakes.Tests", "UglyToad.FakeItEasy.EntityFrameworkFakes.Tests\UglyToad.FakeItEasy.EntityFrameworkFakes.Tests.csproj", "{37CAEBE2-F29B-4B56-BC33-197430CF9EEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UglyToad.FakeItEasy.EntityFrameworkFakes.Integration", "UglyToad.FakeItEasy.EntityFrameworkFakes.Integration\UglyToad.FakeItEasy.EntityFrameworkFakes.Integration.csproj", "{916F214A-5D4B-4C98-811D-F37EC145A0C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{37CAEBE2-F29B-4B56-BC33-197430CF9EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37CAEBE2-F29B-4B56-BC33-197430CF9EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37CAEBE2-F29B-4B56-BC33-197430CF9EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{916F214A-5D4B-4C98-811D-F37EC145A0C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{916F214A-5D4B-4C98-811D-F37EC145A0C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{916F214A-5D4B-4C98-811D-F37EC145A0C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{916F214A-5D4B-4C98-811D-F37EC145A0C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

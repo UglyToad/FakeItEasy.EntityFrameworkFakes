@@ -100,39 +100,5 @@
                 Assert.ThrowsAsync<InvalidOperationException>(
                     () => context.Acorns.SingleAsync(a => a.Id == int.MaxValue));
         }
-
-        [Fact]
-        public void FindWorksCorrectlyForFirstInList()
-        {
-            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
-
-            var expected = TestDataFactory.AcornTestData.OrderBy(a => a.Id).First();
-
-            var result = context.Acorns.Find(expected.Id);
-
-            Assert.Equal(expected, result, Comparer);
-        }
-
-        [Fact]
-        public void FindWorksCorrectlyForSecondInList()
-        {
-            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
-
-            var expected = TestDataFactory.AcornTestData.OrderBy(a => a.Id).Skip(1).First();
-
-            var result = context.Acorns.Find(expected.Id);
-
-            Assert.Equal(expected, result, Comparer);
-        }
-
-        [Fact]
-        public void FindReturnsNullCorrectly()
-        {
-            ContextFaker.ContextReturnsDbSet(() => context.Acorns, TestDataFactory.AcornTestData.ToList());
-            
-            var result = context.Acorns.Find(int.MaxValue);
-
-            Assert.Null(result);
-        }
     }
 }

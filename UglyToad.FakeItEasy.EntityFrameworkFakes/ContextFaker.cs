@@ -15,6 +15,11 @@
             return A.Fake<T>();
         }
 
+        public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor) where T : class
+        {
+            ContextReturnsDbSet(dbSetAccessor, null);
+        }
+
         public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor, List<T> data)
             where T : class
         {
@@ -95,6 +100,18 @@
             A.CallTo(() => dbSet.Remove(A<T>.Ignored))
                 .Invokes((T item) => data.Remove(item))
                 .ReturnsLazily((T item) => item);
+
+            A.CallTo(() => dbSet.RemoveRange(A<IEnumerable<T>>.Ignored))
+                .Invokes((IEnumerable<T> items) =>
+                {
+                    foreach (var item in items)
+                    {
+                        if (data.Contains(item))
+                        {
+                            data.Remove(item);
+                        }
+                    }
+                }).ReturnsLazily((IEnumerable<T> items) => items);
         }
     }
 }
