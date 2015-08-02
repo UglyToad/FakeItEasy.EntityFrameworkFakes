@@ -7,8 +7,8 @@
     <ProjectGuid>{6F9FE50A-C3F7-468F-B651-5E9104698493}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UglyToad.FakeItEasy.EntityFrameworkFakes.Net40</RootNamespace>
-    <AssemblyName>UglyToad.FakeItEasy.EntityFrameworkFakes.Net40</AssemblyName>
+    <RootNamespace>UglyToad.FakeItEasy.EntityFrameworkFakes</RootNamespace>
+    <AssemblyName>UglyToad.FakeItEasy.EntityFrameworkFakes</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\UglyToad.FakeItEasy.EntityFrameworkFakes.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
