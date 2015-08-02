@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata>
+    <id>UglyToad.FakeItEasy.EntityFrameworkFakes</id>
+    <version>1.0.0</version>
+    <title>UglyToad.FakeItEasy.EntityFrameworkFakes</title>
+    <authors>UglyToad</authors>
+    <owners>UglyToad</owners>
+    <licenseUrl>https://github.com/UglyToad/FakeItEasy.EntityFrameworkFakes/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/UglyToad/FakeItEasy.EntityFrameworkFakes</projectUrl>
+	<iconUrl>https://raw.githubusercontent.com/UglyToad/DataTable/master/uglytoadsmall.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Easy mocking for EntityFramework 6.</description>
+	<tags>EntityFramework FakeItEasy Fakes Mocks Mocking TDD Faking Stubs unittesting</tags>
+  </metadata>
+  <files>
+		<file src="UglyToad.FakeItEasy.EntityFrameworkFakes\bin\Release\UglyToad.FakeItEasy.EntityFrameworkFakes.dll" target="lib\net45"/>
+		<file src="UglyToad.FakeItEasy.EntityFrameworkFakes\bin\Release\UglyToad.FakeItEasy.EntityFrameworkFakes.xml" target="lib\net45"/>
+		<file src="UglyToad.FakeItEasy.EntityFrameworkFakes.Net40\bin\Release\UglyToad.FakeItEasy.EntityFrameworkFakes.dll" target="lib\net40"/>
+		<file src="UglyToad.FakeItEasy.EntityFrameworkFakes.Net40\bin\Release\UglyToad.FakeItEasy.EntityFrameworkFakes.xml" target="lib\net40"/>
+	</files>
+</package>
+

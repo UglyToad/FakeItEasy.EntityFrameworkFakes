@@ -1,0 +1,1 @@
+.\tools\nuget.exe pack .\UglyToad.FakeItEasy.EntityFrameworkFakes.nuspec

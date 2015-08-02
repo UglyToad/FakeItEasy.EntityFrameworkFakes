@@ -10,27 +10,41 @@
     using System.Threading.Tasks;
     using global::FakeItEasy;
 
+    /// <summary>
+    /// Class containing utility methods for faking the EntityFramework DbContext and DbSet.
+    /// </summary>
     public class ContextFaker
     {
         private static ConcurrentDictionary<Type, object> idGetters =
             new ConcurrentDictionary<Type, object>();
 
+        /// <summary>
+        /// Create a fake context of the given type.
+        /// </summary>
+        /// <typeparam name="T">The type of the context to fake.</typeparam>
+        /// <returns>The faked DbContext of type T.</returns>
         public static T CreateContext<T>() where T : DbContext
         {
             return A.Fake<T>();
         }
 
-        public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor) where T : class
-        {
-            ContextReturnsDbSet(dbSetAccessor, null);
-        }
-
+        /// <summary>
+        /// Configure the property to access when calling DbSet.Find() for a given type of entity.
+        /// </summary>
+        /// <typeparam name="T">The type of entity this find method corresponds to.</typeparam>
+        /// <param name="func">The func for accessing the property of an entity.</param>
         public static void AddIdGetterForType<T>(Func<T, object> func) where T : class
         {
             idGetters.TryAdd(typeof (T), func);
         }
 
-        public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor, List<T> data)
+        /// <summary>
+        /// Configure a fake DbSet for the given context DbSet. The DbSet uses the data passed in.
+        /// </summary>
+        /// <typeparam name="T">The type of the entity for this DbSet.</typeparam>
+        /// <param name="dbSetAccessor">The func for accessing the DbSet from the context.</param>
+        /// <param name="data">The list of data this DbSet will use for add/remove/query operations. Be aware this list will be modified by operations against the DbSet.</param>
+        public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor, List<T> data = null)
             where T : class
         {
             if (data == null)

@@ -20,6 +20,26 @@ The DbSets can then be configured using:
 	// ContextFaker.ContextReturnsDbSet(lambda expression accessing DbSet, list of test data)
 	ContextFaker.ContextReturnsDbSet(() => context.Acorns, new List<Acorn>());
 
+If you use ```DbSet.Find()``` on your entity the ContextFaker will attempt to use properties with the name "Id" or "ClassName" + "Id". If you need to configure a property with a different name, use the following method:
+
+	ContextFaker.AddIdGetterForType((T entity) => entity.SomeWeirdIdProperty); 
+
+## Notes ##
+
+The faked set supports the following operations:
+
++ Add
++ AddRange
++ Attach
++ Find
++ FindAsync
++ Remove
++ RemoveRange
+
+Any queries using ```Include()``` will effectively ignore the Include and just use the data passed in to the creation of the fake DbSet.
+
+Be aware that any data passed into ```ContextReturnsDbSet()``` will be changed by operations against the DbSet so ensure unexpected changes to the list do not affect your tests.
+
 
 ## Implementation ##
 
