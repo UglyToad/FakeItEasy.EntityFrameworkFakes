@@ -139,10 +139,22 @@
         }
 
         [Fact]
-        public void AddDoesnotDuplicateRecords()
+        public void AddDoesNotDuplicateRecords()
         {
             context.Acorns.Add(acorn1);
             context.Acorns.Add(acorn1);
+
+            Assert.Single(context.Acorns, acorn1);
+        }
+
+        [Fact]
+        public void CanUseAsIDisposable()
+        {
+            using (context)
+            {
+                context.Acorns.Add(acorn1);
+                context.SaveChanges();
+            }
 
             Assert.Single(context.Acorns, acorn1);
         }

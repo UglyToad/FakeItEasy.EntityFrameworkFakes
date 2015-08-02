@@ -1,15 +1,20 @@
 ﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
     using global::FakeItEasy;
 
     public class ContextFaker
     {
+        private static ConcurrentDictionary<Type, object> idGetters =
+            new ConcurrentDictionary<Type, object>();
+
         public static T CreateContext<T>() where T : DbContext
         {
             return A.Fake<T>();
@@ -18,6 +23,11 @@
         public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor) where T : class
         {
             ContextReturnsDbSet(dbSetAccessor, null);
+        }
+
+        public static void AddIdGetterForType<T>(Func<T, object> func) where T : class
+        {
+            idGetters.TryAdd(typeof (T), func);
         }
 
         public static void ContextReturnsDbSet<T>(Expression<Func<DbSet<T>>> dbSetAccessor, List<T> data)
@@ -52,7 +62,9 @@
 
             SetUpRemoveForDbSet(dbSet, data);
 
-            A.CallTo(() => dbSet.Find(A<object[]>.Ignored)).Returns(dbSet.FirstOrDefault());
+            SetUpFindForDbSet(dbSet, data);
+
+            SetUpIncludeForDbSet(dbSet, data);
         }
 
         private static void SetUpAsyncQueryingForFakeDbSet<T>(DbSet<T> dbSet, ICollection<T> data) where T : class
@@ -112,6 +124,55 @@
                         }
                     }
                 }).ReturnsLazily((IEnumerable<T> items) => items);
+        }
+
+        private static void SetUpFindForDbSet<T>(DbSet<T> dbSet, List<T> data) where T : class
+        {
+            A.CallTo(() => dbSet.Find(A<object[]>.Ignored))
+                .ReturnsLazily((object[] ids) =>
+                {
+                    var type = typeof(T);
+                    Func<T, object> func;
+
+                    if (ids.Length != 1)
+                    {
+                        // We do not support 
+                        return null;
+                    }
+
+                    if (idGetters.ContainsKey(type))
+                    {
+                        func = (Func<T, object>)idGetters[type];
+                    }
+                    else
+                    {
+                        func = ReflectionHelper.GetId<T>();
+                        idGetters.TryAdd(type, func);
+                    }
+
+                    if (func == null)
+                    {
+                        return null;
+                    }
+
+                    foreach (var item in data)
+                    {
+                        if (func(item).Equals(ids[0]))
+                        {
+                            return item;
+                        }
+                    }
+
+                    return null;
+                });
+
+            A.CallTo(() => dbSet.FindAsync(A<object[]>.Ignored))
+                .ReturnsLazily((object[] ids) => Task.FromResult(dbSet.Find(ids)));
+        }
+
+        private static void SetUpIncludeForDbSet<T>(DbSet<T> dbSet, List<T> data) where T : class
+        {
+            A.CallTo(() => dbSet.Include(A<string>.Ignored)).Returns(dbSet);
         }
     }
 }

@@ -1,7 +1,11 @@
 ﻿namespace UglyToad.FakeItEasy.EntityFrameworkFakes.Tests
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using DataAccess;
+    using Domain;
     using Helpers;
     using Xunit;
 
@@ -42,6 +46,31 @@
             var result = context.Acorns.Find(int.MaxValue);
 
             Assert.Null(result);
+        }
+
+        [Fact]
+        public void CanFindWithCustomId()
+        {
+            var guid = new Guid("7C45F3DF-60B4-4E7D-A6EF-E76DFBA9E9B3");
+            var energy = 10000000;
+
+            ContextFaker.AddIdGetterForType((Photon photon) => photon.WavePacketIdentifier);
+            ContextFaker.ContextReturnsDbSet(() => context.Photons,
+                new List<Photon>(new[] {new Photon(guid, energy), new Photon(new Guid(), 13215516451)}));
+
+            var result = context.Photons.Find(guid);
+
+            Assert.Equal(energy, result.Energy);
+        }
+
+        [Fact]
+        public async Task FindAsyncWorks()
+        {
+            var expected = TestDataFactory.AcornTestData.First();
+
+            var result = await context.Acorns.FindAsync(expected.Id);
+
+            Assert.Equal(expected, result, Comparer);
         }
     }
 }

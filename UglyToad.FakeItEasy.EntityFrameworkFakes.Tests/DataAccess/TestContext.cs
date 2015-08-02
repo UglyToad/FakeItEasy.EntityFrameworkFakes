@@ -9,6 +9,8 @@
 
         public virtual DbSet<Acorn> Acorns { get; set; }
 
+        public virtual DbSet<Photon> Photons { get; set; }
+
         public TestContext() : base("default")
         {
             Database.SetInitializer<TestContext>(null);

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextFaker.cs" />
+    <Compile Include="ReflectionHelper.cs" />
     <Compile Include="TestDbAsyncQueryProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestDbAsyncEnumerable.cs" />

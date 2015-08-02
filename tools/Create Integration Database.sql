@@ -25,3 +25,10 @@ VALUES
 (6),
 (7);
 GO
+
+CREATE TABLE [dbo].[Photon]
+(
+	[WavePacketIdentifier] UNIQUEIDENTIFIER CONSTRAINT PK_Photon PRIMARY KEY NOT NULL,
+	[Energy] INT NOT NULL
+);
+GO
