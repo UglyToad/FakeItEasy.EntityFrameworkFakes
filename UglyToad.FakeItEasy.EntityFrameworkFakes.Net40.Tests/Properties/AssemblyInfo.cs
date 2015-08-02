@@ -2,18 +2,25 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("UglyToad.FakeItEasy.EntityFrameworkFakes")]
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("UglyToad.FakeItEasy.EntityFrameworkFakes.Net40.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("UglyToad.FakeItEasy.EntityFrameworkFakes")]
+[assembly: AssemblyProduct("UglyToad.FakeItEasy.EntityFrameworkFakes.Net40.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1f769318-fb44-46c0-aed5-ad8d3d3d8670")]
+[assembly: Guid("3077063f-333a-4d88-988c-000b54984125")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -27,5 +34,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: InternalsVisibleTo("UglyToad.FakeItEasy.EntityFrameworkFakes.Tests")]
